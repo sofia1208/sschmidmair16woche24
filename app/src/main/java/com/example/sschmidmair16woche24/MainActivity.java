@@ -13,9 +13,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -38,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
          db = FirebaseFirestore.getInstance();
-        readFromDB();
+        upadateDB();
         ListView listView = findViewById(R.id.list_View);
         bindAdapterToListView(listView, (ArrayList) messages);
 
@@ -127,11 +132,28 @@ public class MainActivity extends AppCompatActivity {
     }
     private void upadateDB()
     {
+
         db.collection(name).addSnapshotListener(new EventListener<QuerySnapshot>() {
+
+
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                
-                return;
+               for(DocumentChange dc:  queryDocumentSnapshots.getDocumentChanges())
+               {
+                   switch (dc.getType()) {
+                       case ADDED:
+                           Message message = dc.getDocument().toObject(Message.class);
+                           messages.add(message);
+                           Log.d("firestoreDemo.set", "UPADTED!!!");
+                           break;
+                       case MODIFIED:
+                           System.out.println("Modified city: " + dc.getDocument().getData());
+                           break;
+
+                       default:
+                           break;
+                   }
+               }
             }
         });
     }
