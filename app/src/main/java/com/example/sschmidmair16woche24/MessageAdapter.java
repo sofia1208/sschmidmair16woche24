@@ -9,13 +9,14 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MessageAdapter extends ArrayAdapter {
     private final String TAG = "BRWTalk";
     private static final String collectionName = "messages";
     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 
-    public MessageAdapter(Context context, ArrayList notes) {
+    public MessageAdapter(Context context, List notes) {
         super(context, 0, notes);
     }
 

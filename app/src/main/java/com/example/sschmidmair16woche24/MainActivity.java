@@ -13,7 +13,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -21,6 +23,8 @@ import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 public class MainActivity extends AppCompatActivity {
   private boolean login = false;
@@ -34,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
          db = FirebaseFirestore.getInstance();
+        readFromDB();
+        ListView listView = findViewById(R.id.list_View);
+        bindAdapterToListView(listView, (ArrayList) messages);
 
 
 
@@ -57,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
             String message = et.getText().toString();
             messages.add(new Message(username,message));
             writeInDB();
+            ListView listView = findViewById(R.id.list_View);
+            bindAdapterToListView(listView, (ArrayList) messages);
         }
 
 
@@ -115,5 +124,15 @@ public class MainActivity extends AppCompatActivity {
         ListView v = findViewById(R.id.list_View);
         bindAdapterToListView(v, (ArrayList) messages);
 
+    }
+    private void upadateDB()
+    {
+        db.collection(name).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                
+                return;
+            }
+        });
     }
 }

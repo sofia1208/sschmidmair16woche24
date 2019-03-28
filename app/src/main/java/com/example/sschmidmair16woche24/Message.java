@@ -52,6 +52,10 @@ public class Message implements Comparable<Message> {
                 ", message='" + message + '\'' +
                 '}';
     }
+    public Message()
+    {
+        
+    }
 
     @Override
     public int compareTo(@NonNull Message message) {
