@@ -33,10 +33,11 @@
                 android:text="Name" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/OK"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="onClicked"
                 android:text="Button" />
         </LinearLayout>
 
