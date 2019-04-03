@@ -1,5 +1,6 @@
 package com.example.sschmidmair16woche24;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -38,40 +41,40 @@ public class MainActivity extends AppCompatActivity {
     FirebaseFirestore db;
   ArrayAdapter<Message> mAdapter;
   String name = "messages";
+ private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
-         db = FirebaseFirestore.getInstance();
-        upadateDB();
+
+        Intent intent = getIntent();
+        username = intent.getStringExtra("name");
+
+
+        db = FirebaseFirestore.getInstance();
+
         ListView listView = findViewById(R.id.list_View);
         bindAdapterToListView(listView, (ArrayList) messages);
 
+        upadateDB();
 
 
     }
 
     public void onClicked(View view) {
-        if(!login)
-        {
-            EditText et = findViewById(R.id.editText);
-             username = et.getText().toString();
-            //TODO password angemelden
-            login = true;
-            et.setHint("ÉNTER MESSAGE");
-
-        }
 
 
-        else
-        {
+
             EditText et = findViewById(R.id.editText);
             String message = et.getText().toString();
             messages.add(new Message(username,message));
+        ListView listView = findViewById(R.id.list_View);
+        bindAdapterToListView(listView, (ArrayList) messages);
             writeInDB();
-            ListView listView = findViewById(R.id.list_View);
-            bindAdapterToListView(listView, (ArrayList) messages);
-        }
+
+            et.clearComposingText();
+
 
 
     }
@@ -131,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
     private void upadateDB()
-    {
+    {  messages.clear();
 
         db.collection(name).addSnapshotListener(new EventListener<QuerySnapshot>() {
 
