@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
   private boolean login = false;
   List<Message> messages = new ArrayList<>();
   String username;
+  String password;
     FirebaseFirestore db;
   ArrayAdapter<Message> mAdapter;
   String name = "messages";
@@ -50,14 +51,16 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         username = intent.getStringExtra("name");
-
+        password = intent.getStringExtra("password");
 
         db = FirebaseFirestore.getInstance();
+
+        upadateDB();
 
         ListView listView = findViewById(R.id.list_View);
         bindAdapterToListView(listView, (ArrayList) messages);
 
-        upadateDB();
+
 
 
     }
@@ -105,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
         }
+
     }
     private void readFromDB()
     {  db.collection(name)
@@ -150,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                            Log.d("firestoreDemo.set", "UPADTED!!!");
                            break;
                        case MODIFIED:
-                           System.out.println("Modified city: " + dc.getDocument().getData());
+
                            break;
 
                        default:
@@ -159,5 +163,6 @@ public class MainActivity extends AppCompatActivity {
                }
             }
         });
+
     }
 }
